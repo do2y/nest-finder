@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEST-FINDER Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  </head>
+  <body class="h-screen overflow-hidden flex">
+    <aside
+      class="w-[300px] bg-white border-r flex flex-col items-center py-10 px-6 z-10 shadow-xl"
+    >
+      <h1 class="text-2xl font-black mb-12 italic text-blue-600">
+        NEST-FINDER
+      </h1>
+
+      <div class="w-full space-y-8">
+        <div>
+          <label
+            class="block text-sm font-semibold text-gray-700 mb-2 text-center"
+            >나의 기본 자산 정보</label
+          >
+          <div class="relative">
+            <input
+              type="text"
+              id="asset-input"
+              placeholder="예: 1500"
+              value="1500"
+              class="w-full p-3 border rounded-xl text-center focus:outline-blue-500 bg-gray-50 font-bold"
+            />
+            <span class="absolute right-4 top-3 text-gray-400">만원</span>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label
+            class="block text-sm font-semibold text-gray-700 mb-2 text-center"
+            >월 평균 수입</label
+          >
+          <div class="relative">
+            <input
+              type="text"
+              id="income-input"
+              placeholder="예: 400"
+              value="400"
+              class="w-full p-3 border rounded-xl text-center focus:outline-blue-500 bg-gray-50 font-bold"
+            />
+            <span class="absolute right-4 top-3 text-gray-400">만원</span>
+          </div>
+        </div>
+        <div style="border-top: 1px solid #e5e7eb; margin: 20px 0"></div>
+        <div class="space-y-4">
+          <div class="flex justify-between items-center">
+            <label class="text-sm font-semibold text-gray-700"
+              >월 저축 목표</label
+            >
+
+            <div class="flex items-center gap-2">
+              <span id="save-amount" class="text-[11px] text-gray-500"
+                >월 234만원</span
+              >
+              <span id="save-val" class="text-blue-600 font-bold">54%</span>
+            </div>
+          </div>
+
+          <input
+            type="range"
+            id="save-slider"
+            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+          />
+          <p class="text-[10px] text-gray-400 text-center">권장 저축률: 40%</p>
+        </div>
+        <div>
+          <label
+            class="block text-sm font-semibold text-gray-700 mb-2 text-center"
+            >예상 대출 금리</label
+          >
+          <div class="relative">
+            <input
+              type="text"
+              id="interest-input"
+              value="3.5"
+              class="w-full p-3 border rounded-xl text-center focus:outline-blue-500 bg-gray-50 font-bold"
+            />
+            <span class="absolute right-4 top-3 text-gray-400">%</span>
+          </div>
+        </div>
+
+        <button
+          class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100"
+        >
+          분석 업데이트
+        </button>
+      </div>
+    </aside>
+
+    <main class="flex-1 relative">
+      <div id="map" class="w-full h-full"></div>
+    </main>
+
+    <section
+      id="report-panel"
+      class="w-[380px] bg-white border-l overflow-y-auto no-scrollbar p-6 space-y-6"
+    >
+      <div class="bg-white rounded-2xl overflow-hidden border shadow-sm">
+        <img
+          id="prop-img"
+          src="./assets/image.png"
+          class="w-full h-48 object-cover bg-gray-100"
+        />
+        <div class="p-4">
+          <div class="flex justify-between items-center mb-1">
+            <h2 id="prop-name" class="font-black text-xl text-gray-900">
+              자이 4단지
+            </h2>
+            <span
+              id="prop-status"
+              class="text-[10px] font-bold px-2 py-1 rounded-full"
+              >지금매수 가능</span
+            >
+          </div>
+          <p id="prop-price" class="text-blue-600 font-bold text-lg">
+            매매 11억 9,200
+          </p>
+          <p
+            id="prop-area"
+            class="text-[11px] text-gray-400 mt-1 border-t pt-2"
+          >
+            공급 79.83m² / 전용 59.89m²
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-4">
+        <h3 class="font-bold text-sm">미래 예측 타임라인</h3>
+        <p style="font-size: 10px; color: #535353; margin-top: 0">
+          몇 년 뒤에 내 집 마련이 가능할까?
+        </p>
+        <div class="flex items-center justify-between relative px-2">
+          <div class="text-center z-10 text-[10px] font-bold">
+            <div
+              class="w-6 h-6 bg-blue-600 rounded-full mx-auto mb-1 flex items-center justify-center text-white italic"
+            >
+              ✓
+            </div>
+            <p>현재</p>
+          </div>
+          <div
+            class="flex-1 h-[2px] border-t-2 border-dashed border-blue-200 mx-1 mb-5"
+          ></div>
+          <div class="text-center z-10 text-[10px] font-bold text-gray-400">
+            <div
+              class="w-6 h-6 bg-blue-200 rounded-full mx-auto mb-1 border-2 border-white"
+            ></div>
+            <p>대출 실행</p>
+          </div>
+          <div
+            class="flex-1 h-[2px] border-t-2 border-dashed border-gray-200 mx-1 mb-5"
+          ></div>
+          <div class="text-center z-10 text-[10px] font-bold text-blue-600">
+            <div
+              class="w-8 h-8 bg-yellow-400 rounded-full mx-auto mb-1 flex items-center justify-center shadow-lg text-white"
+            >
+              ★
+            </div>
+            <p id="target-period">3년 6개월 뒤</p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="margin-top: 12px !important"
+        class="bg-blue-50 border border-blue-100 rounded-xl p-3 flex gap-2 items-center"
+      >
+        <span>💡</span>
+        <p
+          id="prop-tip"
+          class="text-[11px] text-blue-800 leading-tight font-medium"
+        >
+          로딩 중...
+        </p>
+      </div>
+
+      <div class="h-40 bg-white rounded-xl border p-2 shadow-inner relative">
+        <canvas id="priceChart"></canvas>
+      </div>
+
+      <div class="space-y-3 pt-4 border-t text-xs">
+        <div class="flex justify-between">
+          <span class="text-gray-400">부족한 금액</span
+          ><span id="shortfall" class="font-bold text-red-500">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-400">월 목표 저축액</span
+          ><span id="monthly-save" class="font-bold">-</span>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../data/data.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
