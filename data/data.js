@@ -6,7 +6,7 @@ const propertyData = [
     lng: 126.972,
     img: "./assets/apt01.png",
     price: "1억 9,200",
-    price_raw: 1192000000,
+    price_raw: 192000000,
     area: "공급 79.83m² / 전용 59.89m²",
   },
   {
