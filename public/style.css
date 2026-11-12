@@ -114,22 +114,19 @@ body {
 }
 
 #asset-input:hover,
-#income-input:hover,
-#interest-input:hover {
+#income-input:hover {
   border-color: #cbd5e1 !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 #asset-input,
-#income-input,
-#interest-input {
+#income-input {
   color: #738092 !important;
   font-weight: 500;
 }
 
 #asset-input:focus,
-#income-input:focus,
-#interest-input:focus {
+#income-input:focus {
   color: #1e293b !important;
   font-weight: 700;
 }
