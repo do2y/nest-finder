@@ -37,6 +37,21 @@ Grid 레이아웃 기반의 대시보드 형태로 구성했습니다.
 
 <br>
 
+## ▶ 설치 및 실행
+
+요구 사항: Node.js 18 이상 (검증 환경: Node.js 24.21.0 LTS, npm 11.19.0)
+
+```bash
+npm ci        # package-lock.json 기준으로 의존성 설치
+npm start     # http://localhost:3000
+```
+
+- 개발 중 파일이 바뀌면 자동으로 재시작: `npm run dev`
+- 다른 포트 사용: `PORT=4000 npm start`
+- 포트가 이미 사용 중이면 시작 실패 메시지를 출력하고 종료 코드 1로 끝납니다.
+
+<br>
+
 ## 📂 프로젝트 구조 </b>
 
 <br>
