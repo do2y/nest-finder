@@ -19,69 +19,83 @@
       <div class="w-full space-y-8">
         <div>
           <label
+            for="asset-input"
             class="block text-sm font-semibold text-gray-700 mb-2 text-center"
             >나의 기본 자산 정보</label
           >
           <div class="relative">
             <input
               type="text"
+              inputmode="numeric"
               id="asset-input"
-              placeholder="예: 1500"
+              placeholder="예: 1,500"
               value="1500"
+              aria-describedby="asset-error"
               class="w-full p-3 border rounded-xl text-center focus:outline-blue-500 bg-gray-50 font-bold"
             />
             <span class="absolute right-4 top-3 text-gray-400">만원</span>
           </div>
+          <p id="asset-error" class="field-error" aria-live="polite"></p>
         </div>
 
         <div class="mt-4">
           <label
+            for="income-input"
             class="block text-sm font-semibold text-gray-700 mb-2 text-center"
             >월 평균 수입</label
           >
           <div class="relative">
             <input
               type="text"
+              inputmode="numeric"
               id="income-input"
               placeholder="예: 400"
               value="400"
+              aria-describedby="income-error"
               class="w-full p-3 border rounded-xl text-center focus:outline-blue-500 bg-gray-50 font-bold"
             />
             <span class="absolute right-4 top-3 text-gray-400">만원</span>
           </div>
+          <p id="income-error" class="field-error" aria-live="polite"></p>
         </div>
         <div style="border-top: 1px solid #e5e7eb; margin: 20px 0"></div>
         <div class="space-y-4">
           <div class="flex justify-between items-center">
-            <label class="text-sm font-semibold text-gray-700"
+            <label for="save-slider" class="text-sm font-semibold text-gray-700"
               >월 저축 목표</label
             >
 
             <div class="flex items-center gap-2">
               <span id="save-amount" class="text-[11px] text-gray-500"
-                >월 234만원</span
+                >—</span
               >
-              <span id="save-val" class="text-blue-600 font-bold">54%</span>
+              <span id="save-val" class="text-blue-600 font-bold">—</span>
             </div>
           </div>
 
           <input
             type="range"
             id="save-slider"
+            min="0"
+            max="100"
+            step="1"
+            value="50"
+            aria-describedby="rate-error"
             class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
           />
-          <p class="text-[10px] text-gray-400 text-center">권장 저축률: 40%</p>
+          <p id="rate-error" class="field-error" aria-live="polite"></p>
         </div>
-        <button
-          class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100"
-        >
-          분석 업데이트
-        </button>
       </div>
     </aside>
 
     <main class="flex-1 relative">
       <div id="map" class="w-full h-full"></div>
+      <div id="map-legend" class="map-legend" aria-label="지도 마커 범례">
+        <p class="font-bold mb-1">마커 색상 (현재 입력 자산 기준)</p>
+        <p><span class="legend-swatch band-covered">✓</span> 보유 자산 ≥ 매물 가격</p>
+        <p><span class="legend-swatch band-short"></span> 보유 자산 &lt; 매물 가격</p>
+        <p><span class="legend-swatch band-invalid"></span> 입력 오류로 계산 중단</p>
+      </div>
     </main>
 
     <section
@@ -92,29 +106,27 @@
         <img
           id="prop-img"
           src="./assets/image.png"
+          alt=""
           class="w-full h-48 object-cover bg-gray-100"
         />
         <div class="p-4">
-          <div class="flex justify-between items-center mb-1">
-            <h2 id="prop-name" class="font-black text-xl text-gray-900">
-              자이 4단지
-            </h2>
-            <span
-              id="prop-status"
-              class="text-[10px] font-bold px-2 py-1 rounded-full"
-              >지금매수 가능</span
-            >
-          </div>
-          <p id="prop-price" class="text-blue-600 font-bold text-lg">
-            매매 11억 9,200
-          </p>
+          <h2 id="prop-name" class="font-black text-xl text-gray-900">—</h2>
+          <p id="prop-price" class="text-blue-600 font-bold text-lg">—</p>
           <p
             id="prop-area"
             class="text-[11px] text-gray-400 mt-1 border-t pt-2"
           >
-            공급 79.83m² / 전용 59.89m²
+            —
           </p>
+          <p
+            id="prop-status"
+            class="status-pill status-neutral mt-2"
+          >—</p>
         </div>
+      </div>
+
+      <div id="result-alert" class="result-alert" role="alert" hidden>
+        입력값을 확인해 주세요. 잘못된 입력이 있어 계산을 멈췄습니다.
       </div>
 
       <div class="bg-white border rounded-2xl p-4 shadow-sm space-y-4">
@@ -122,8 +134,12 @@
         <p style="font-size: 10px; color: #535353; margin-top: 0">
           몇 년 뒤에 내 집 마련이 가능할까?
         </p>
-        <div class="flex items-center justify-between relative px-2">
-          <div class="text-center z-10 text-[10px] font-bold">
+        <div
+          id="timeline"
+          data-state="invalid"
+          class="flex items-center justify-between relative px-2"
+        >
+          <div class="timeline-step text-center z-10 text-[10px] font-bold">
             <div
               class="w-6 h-6 bg-blue-600 rounded-full mx-auto mb-1 flex items-center justify-center text-white italic"
             >
@@ -134,22 +150,12 @@
           <div
             class="flex-1 h-[2px] border-t-2 border-dashed border-blue-200 mx-1 mb-5"
           ></div>
-          <div class="text-center z-10 text-[10px] font-bold text-gray-400">
-            <div
-              class="w-6 h-6 bg-blue-200 rounded-full mx-auto mb-1 border-2 border-white"
-            ></div>
-            <p>대출 실행</p>
-          </div>
-          <div
-            class="flex-1 h-[2px] border-t-2 border-dashed border-gray-200 mx-1 mb-5"
-          ></div>
-          <div class="text-center z-10 text-[10px] font-bold text-blue-600">
-            <div
-              class="w-8 h-8 bg-yellow-400 rounded-full mx-auto mb-1 flex items-center justify-center shadow-lg text-white"
-            >
+          <div class="timeline-step timeline-target text-center z-10 text-[10px] font-bold">
+            <div class="timeline-goal-icon w-8 h-8 rounded-full mx-auto mb-1 flex items-center justify-center shadow-lg text-white">
               ★
             </div>
-            <p id="target-period">3년 6개월 뒤</p>
+            <p>목표 도달</p>
+            <p id="target-period">—</p>
           </div>
         </div>
       </div>
@@ -163,29 +169,36 @@
           id="prop-tip"
           class="text-[11px] text-blue-800 leading-tight font-medium"
         >
-          로딩 중...
+          계산 가정: 매물 가격은 연 2% 상승(월 복리로 환산), 저축 이자 0%, 저축액은 매월 말 적립, 최대 50년(600개월)까지 계산합니다. 실제 시세 변동은 반영하지 않습니다.
         </p>
       </div>
 
       <div class="h-40 bg-white rounded-xl border p-2 shadow-inner relative">
-        <canvas id="priceChart"></canvas>
+        <canvas id="priceChart" aria-label="누적 자산과 매물 가격 추이 그래프" role="img"></canvas>
       </div>
 
       <div class="space-y-3 pt-4 border-t text-xs">
         <div class="flex justify-between">
+          <span class="text-gray-400">자산 비율 (보유 자산 ÷ 매물 가격)</span
+          ><span id="asset-ratio" class="font-bold">—</span>
+        </div>
+        <div class="flex justify-between">
           <span class="text-gray-400">부족한 금액</span
-          ><span id="shortfall" class="font-bold text-red-500">-</span>
+          ><span id="shortfall" class="font-bold text-red-500">—</span>
         </div>
         <div class="flex justify-between">
           <span class="text-gray-400">월 목표 저축액</span
-          ><span id="monthly-save" class="font-bold">-</span>
+          ><span id="monthly-save" class="font-bold">—</span>
         </div>
+        <p id="disclaimer" class="text-[10px] text-gray-400 leading-snug pt-2">
+          대출 가능 여부를 판단하는 기능이 아닙니다. 취득세·중개보수 등 부대비용은 포함하지 않습니다.
+        </p>
       </div>
     </section>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../data/data.js"></script>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
