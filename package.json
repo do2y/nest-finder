@@ -6,7 +6,11 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:all": "vitest run && playwright test"
   },
   "repository": {
     "type": "git",
@@ -16,7 +20,7 @@
   "author": "",
   "type": "commonjs",
   "engines": {
-    "node": ">=18"
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
   },
   "bugs": {
     "url": "https://github.com/do2y/nest-finder/issues"
@@ -24,5 +28,9 @@
   "homepage": "https://github.com/do2y/nest-finder#readme",
   "dependencies": {
     "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "vitest": "5.0.5"
   }
 }
