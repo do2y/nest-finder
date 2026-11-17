@@ -77,11 +77,23 @@ nest-finder
 │
 ├── public
 │   ├── assets         # 이미지
+│   ├── calc           # 계산 순수 함수 (ES Module, UI와 테스트가 공유)
+│   │   ├── input.js         # 입력 검증 (만원 단위 정수, 천 단위 쉼표)
+│   │   ├── affordability.js # 자산 비율·부족 금액
+│   │   ├── simulate.js      # 목표 도달 시뮬레이션 (연 2% 복리, 최대 600개월)
+│   │   └── format.js        # 금액·기간·비율 표시 형식
 │   ├── index.html     # 메인 페이지
-│   ├── script.js      # 지도 및 계산 로직
+│   ├── script.js      # 화면 렌더링과 이벤트 처리 (ES Module)
 │   └── style.css      # UI 스타일
 │
-└── server.js          # Express 서버
+├── tests
+│   ├── unit           # Vitest: 계산 모듈 단위 테스트
+│   ├── server         # Vitest: 서버 기동·PORT·포트 충돌 테스트
+│   └── e2e            # Playwright: 브라우저 통합 테스트
+│
+├── server.js          # Express 서버 (PORT 환경변수, 기본 3000)
+├── vitest.config.mjs
+└── playwright.config.mjs
 ```
 
 <br>
