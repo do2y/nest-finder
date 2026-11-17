@@ -108,6 +108,29 @@ test("E-02c NF-003/014: mid-typing state ('1,' → '1,500') does not leave stale
   await expect(page.locator("#asset-error")).toHaveText("쉼표는 세 자리마다 넣어 주세요. (예: 1,500)", { timeout: 3000 });
 });
 
+test("E-02d NF-003: once a value is fixed, a pending error timer never re-shows the error later; a shown error clears immediately", async ({ page }) => {
+  // 1) Invalid → fix within 600ms → wait past the timer (1.2s): the error must not appear late
+  await page.fill("#asset-input", "1,5");
+  await page.fill("#asset-input", "1,500");
+  await page.waitForTimeout(1200);
+  await expect(page.locator("#asset-error")).toHaveText("");
+  await expect(page.locator("#asset-input")).not.toHaveAttribute("aria-invalid", "true");
+  // 2) Error shown via timer → fixing it clears the error immediately
+  await page.fill("#asset-input", "abc");
+  await expect(page.locator("#asset-error")).toHaveText("숫자와 쉼표(,)만 입력할 수 있어요.", { timeout: 3000 });
+  await page.fill("#asset-input", "1500");
+  await expect(page.locator("#asset-error")).toHaveText("", { timeout: 100 });
+  await page.waitForTimeout(1000);
+  await expect(page.locator("#asset-error")).toHaveText("");
+  // 3) Pending timer on the income field, then the user edits a different field → stays consistent once income is fixed
+  await page.fill("#income-input", "4,");
+  await page.fill("#asset-input", "1600");
+  await page.fill("#income-input", "400");
+  await page.waitForTimeout(1000);
+  await expect(page.locator("#income-error")).toHaveText("");
+  await expect(page.locator("#target-period")).not.toHaveText("—");
+});
+
 test("E-03 NF-001: no state change at the 70% boundary, income-independent, no unfounded loan wording, disclaimer present", async ({ page }) => {
   await selectMarker(page, MARKER.자이);
   await setInputs(page, { asset: "13439", income: "400", rate: 50 });
