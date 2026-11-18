@@ -1,0 +1,39 @@
+{
+  "name": "nest-finder",
+  "version": "1.0.0",
+  "private": true,
+  "description": "자산 기반 부동산 구매 시뮬레이션 대시보드",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:all": "vitest run && playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/do2y/nest-finder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "commonjs",
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/do2y/nest-finder/issues"
+  },
+  "homepage": "https://github.com/do2y/nest-finder#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "vitest": "5.0.5"
+  },
+  "allowScripts": {
+    "fsevents": false
+  }
+}
